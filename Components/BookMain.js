@@ -10,14 +10,21 @@ import { UserAuth } from "@/Components/context/AuthContext";
 import SignUp from "./SignUp";
 import { db } from "@/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import usePremiumStatus from "@/stripe/usePremiumStatus";
+import { getAuth } from "firebase/auth";
 
 function BookMain({ bookData, handleCloseModal }) {
   //   console.log(bookData);
   const { user } = UserAuth();
+  const auth = getAuth();
   const [showModal, setShowModal] = useState(false);
   const [userIsSubscribed, setUserIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { push } = useRouter();
+
+  const [isUser, userLoading] = useAuthState(auth);
+  const userIsPremium = usePremiumStatus(isUser);
 
   async function saveToLibrary(userId, bookId) {
     try {
@@ -48,8 +55,8 @@ function BookMain({ bookData, handleCloseModal }) {
       return null;
     }
 
-    if (bookData.subscriptionRequired && !userIsSubscribed) {
-      push("/subscribe");
+    if (bookData.subscriptionRequired && !userIsPremium) {
+      push("/choose-plan");
       return null;
     }
 
