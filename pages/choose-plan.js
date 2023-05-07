@@ -181,7 +181,7 @@ function ChoosePlan() {
                   <span>
                     {user ? (
                       <>
-                        {userIsPremium ? (
+                        {!userIsPremium ? (
                           <button
                             onClick={handleSubscriptionClick}
                             className="bg-[#2bd97c] text-black w-[300px] h-10 rounded text-base flex items-center justify-center min-w-[180px]
