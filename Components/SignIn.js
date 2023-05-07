@@ -79,13 +79,13 @@ function SignIn({ handleCloseModal }) {
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-10 border-gray-300 border-[2px] rounded text-black px-3 outline-none"
                   type="text"
-                  placeholder="Email Address"
+                  placeholder="guest@gmail.com"
                 ></input>
                 <input
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-10 border-gray-300 border-[2px] rounded text-black px-3 outline-none"
-                  type="text"
-                  placeholder="Password"
+                  type="password"
+                  placeholder="guest123"
                 ></input>
 
                 <button

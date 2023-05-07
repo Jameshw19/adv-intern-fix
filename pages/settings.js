@@ -4,6 +4,11 @@ import React, { useEffect, useState } from "react";
 import { UserAuth } from "../Components/context/AuthContext";
 import { useRouter } from "next/router";
 import SignIn from "@/Components/SignIn";
+import usePremiumStatus from "@/stripe/usePremiumStatus";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function settings() {
   const { user } = UserAuth();
@@ -11,6 +16,9 @@ function settings() {
   const { push } = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const userIsPremium = usePremiumStatus(user);
+  const userIsPremiumPlus = usePremiumStatus(user);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -66,21 +74,24 @@ function settings() {
                     <div className="text-lg font-bold text-[#032b41] ">
                       Your Subscription plan
                     </div>
-                    {isSubscribed ? (
-                      <div className="text-[#032b41]">Premium</div>
-                    ) : (
-                      <div>
+
+                    {!userIsPremium ? (
+                      <>
                         <div className="text-[#032b41]">Basic</div>
                         <button
                           onClick={handleUpgradePlan}
                           className="bg-[#2bd97c] text-black w-[200px] h-10 rounded text-base flex items-center justify-center min-w-[180px]
-                  cursor-pointer outline-none border-none"
+    cursor-pointer outline-none border-none"
                         >
                           <span className="text-base text-black">
                             Upgrade to Premium
                           </span>
                         </button>
-                      </div>
+                      </>
+                    ) : userIsPremiumPlus ? (
+                      <div className="text-[#032b41]">Premium Plus</div>
+                    ) : (
+                      <div className="text-[#032b41]">Premium</div>
                     )}
                   </div>
                   <div className="flex flex-col items-start gap-2 pb-6">

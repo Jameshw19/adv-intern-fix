@@ -16,7 +16,6 @@ function BookMain({ bookData, handleCloseModal }) {
   const { user } = UserAuth();
   const [showModal, setShowModal] = useState(false);
   const [userIsSubscribed, setUserIsSubscribed] = useState(false);
-  // const [savedBooks, setSavedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { push } = useRouter();
 
