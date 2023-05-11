@@ -108,54 +108,54 @@ function BookMain({ bookData, handleCloseModal }) {
         </>
       ) : (
         <>
-          <div className="max-w-[1070px] w-full mx-auto px-5">
+          <div className="max-w-[1070px] w-full mx-auto px-5 max-md:ml-0 max-md:w-full">
             <div className="py-10 w-full">
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <div className="text-black mb-4 font-semibold text-3xl ">
+              <div className="flex gap-4 max-md:flex-col max-md:gap-8">
+                <div className="w-full max-md:order-1">
+                  <div className="text-[#032b41] mb-4 font-semibold text-3xl max-md:text-2xl ">
                     {bookData.title}&nbsp;
                     {bookData.subscriptionRequired ? "(Premium)" : null}
                   </div>
-                  <div className="text-black mb-4 font-semibold ">
+                  <div className="text-[#032b41] mb-4 font-semibold max-md:text-sm ">
                     {bookData.author}
                   </div>
-                  <div className="text-xl text-black mb-4 font-light">
+                  <div className="text-xl text-[#032b41] mb-4 font-light max-md:text-lg">
                     {bookData.subTitle}
                   </div>
-                  <div className="border-y-[1px] py-4 mb-5 border-y-gray-400">
+                  <div className="border-y-[1px] py-4 mb-5 border-y-[#e1e7ea]">
                     <div className="flex flex-wrap max-w-[400px] gap-y-3">
-                      <div className="flex items-center w-1/2 text-black font-medium text-sm">
-                        <div className="flex  h-7 w-7 mr-1 text-black font-medium text-sm">
+                      <div className="flex items-center w-1/2 text-[#032b41] font-medium text-sm">
+                        <div className="flex  h-7 w-7 mr-1 text-[#032b41] font-medium text-sm">
                           <StarBorderIcon className="w-full h-full " />
                         </div>
-                        <div className=" text-black font-medium  text-sm">
+                        <div className=" text-[#032b41] font-medium  text-sm">
                           {bookData.averageRating}
                         </div>
-                        <div className=" text-black font-medium  text-sm">
+                        <div className=" text-[#032b41] font-medium  text-sm">
                           &nbsp; ({bookData.totalRating})
                         </div>
                       </div>
-                      <div className="flex items-center w-1/2 text-black font-medium text-sm">
-                        <div className="flex  h-7 w-7 mr-1 text-black font-medium text-sm">
+                      <div className="flex items-center w-1/2 text-[#032b41] font-medium text-sm">
+                        <div className="flex  h-7 w-7 mr-1 text-[#032b41] font-medium text-sm">
                           <AccessTimeIcon className="w-full h-full " />
                         </div>
-                        <div className=" text-black font-medium  text-sm">
+                        <div className=" text-[#032b41] font-medium  text-sm">
                           &nbsp; 03:24
                         </div>
                       </div>
-                      <div className="flex items-center w-1/2 text-black font-medium text-sm">
-                        <div className="flex  h-7 w-7 mr-1 text-black font-medium text-sm">
+                      <div className="flex items-center w-1/2 text-[#032b41] font-medium text-sm">
+                        <div className="flex  h-7 w-7 mr-1 text-[#032b41] font-medium text-sm">
                           <MicIcon className="w-full h-full " />
                         </div>
-                        <div className=" text-black font-medium  text-sm">
+                        <div className=" text-[#032b41] font-medium  text-sm">
                           &nbsp; Audio & Text
                         </div>
                       </div>
-                      <div className="flex items-center w-1/2 text-black font-medium text-sm">
-                        <div className="flex  h-7 w-7 mr-1 text-black font-medium text-sm">
+                      <div className="flex items-center w-1/2 text-[#032b41] font-medium text-sm">
+                        <div className="flex  h-7 w-7 mr-1 text-[#032b41] font-medium text-sm">
                           <LightbulbIcon className="w-full h-full " />
                         </div>
-                        <div className=" text-black font-medium  text-sm">
+                        <div className=" text-[#032b41] font-medium  text-sm">
                           &nbsp; {bookData.keyIdeas} key ideas
                         </div>
                       </div>
@@ -164,8 +164,8 @@ function BookMain({ bookData, handleCloseModal }) {
                   <div className="flex gap-4 mb-5">
                     <button
                       onClick={handleClick}
-                      className="flex items-center justify-center w-[144px] h-[48px] bg-purple-800 text-white 
-                    text-base rounded cursor-pointer gap-2 hover:opacity-80"
+                      className="flex items-center justify-center w-[144px] h-[48px] bg-[#032b41] text-[#fff] 
+                    text-base rounded cursor-pointer gap-2 transition hover:ease-in hover:opacity-[.8]"
                     >
                       <div className="flex">
                         <MenuBookIcon className="h-6 w-6" />
@@ -175,8 +175,8 @@ function BookMain({ bookData, handleCloseModal }) {
                     {showModal && <SignUp handleCloseModal={setShowModal} />}
                     <button
                       onClick={handleClick}
-                      className="flex items-center justify-center w-[144px] h-[48px] bg-purple-800 text-white 
-                    text-base rounded cursor-pointer gap-2 hover:opacity-80"
+                      className="flex items-center justify-center w-[144px] h-[48px] bg-[#032b41] text-[#fff] 
+                    text-base rounded cursor-pointer gap-2 transition hover:ease-in hover:opacity-[.8]"
                     >
                       <div className="flex">
                         <MicIcon className="h-6 w-6" />
@@ -185,7 +185,10 @@ function BookMain({ bookData, handleCloseModal }) {
                     </button>
                     {showModal && <SignUp handleCloseModal={setShowModal} />}
                   </div>
-                  <div className="flex items-center gap-2 text-blue-500 font-medium cursor-pointer mb-10 text-lg hover:opacity-75">
+                  <div
+                    className="flex items-center gap-2 text-[#0365f2] font-medium cursor-pointer mb-10 text-lg 
+                  transition hover:ease-in hover:text-[#044298]"
+                  >
                     <div className="flex w-7 h-7 ">
                       <BookmarkIcon className="w-full h-full" />
                     </div>
@@ -193,29 +196,29 @@ function BookMain({ bookData, handleCloseModal }) {
                       Add title to my library
                     </div>
                   </div>
-                  <div className="text-lg text-black mb-4 font-semibold ">
+                  <div className="text-lg text-[#032b41] mb-4 font-semibold ">
                     Whats it about?
                   </div>
                   <div className="flex flex-wrap gap-4 mb-4">
-                    <div className="bg-gray-300 px-4 h-[48px] flex items-center cursor-not-allowed text-black font-medium rounded hover:opacity-80">
+                    <div className="bg-[#f1f6f4] px-4 h-[48px] flex items-center cursor-not-allowed text-[#032b41] font-medium rounded ">
                       {bookData.tags?.[0]}
                     </div>
-                    <div className="bg-gray-300 px-4 h-[48px] flex items-center cursor-not-allowed text-black font-medium rounded hover:opacity-80">
+                    <div className="bg-[#f1f6f4] px-4 h-[48px] flex items-center cursor-not-allowed text-[#032b41] font-medium rounded ">
                       {bookData.tags?.[1]}
                     </div>
                   </div>
-                  <div className="text-black mb-4 leading-normal">
+                  <div className="text-[#032b41] mb-4 leading-normal max-md:text-sm">
                     {bookData.bookDescription}
                   </div>
-                  <h2 className="text-lg text-black mb-4 font-semibold ">
+                  <h2 className="text-lg text-[#032b41] mb-4 font-semibold ">
                     About the author
                   </h2>
-                  <div className="text-black leading-normal">
+                  <div className="text-[#032b41] leading-normal max-md:text-sm">
                     {bookData.authorDescription}
                   </div>
                 </div>
-                <div>
-                  <div className="h-[300px] w-[300px] min-w-[300px]">
+                <div className="max-md:flex max-md:justify-center">
+                  <div className="h-[300px] w-[300px] min-w-[300px] ">
                     <img
                       className="w-full h-full block"
                       src={bookData.imageLink}

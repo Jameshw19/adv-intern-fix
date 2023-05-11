@@ -53,28 +53,30 @@ function Book() {
             <Link href={"/book/" + book.id} bookData={book}>
               <div>
                 {book.subscriptionRequired ? (
-                  <div className="bg-black w-fit h-[18px] px-2 absolute top-0 right-0 text-white text-xs flex items-center rounded-3xl">
+                  <div className="bg-[#032b41] w-fit h-[18px] px-2 absolute top-0 right-0 text-[#fff] text-[10px] flex items-center rounded-[20px]">
                     Premium
                   </div>
                 ) : null}
                 <div className="mb-2 w-[172px] h-[172px]">
                   <img src={book.imageLink} alt="bookImg" />
                 </div>
-                <div className="text-base font-bold text-black mb-2 ">
+                <div className="text-base font-bold text-[#032b41] mb-2 ">
                   {book.title}
                 </div>
-                <div className="text-sm text-gray-400 font-light mb-2  ">
+                <div className="text-sm text-[#6b757b] font-light mb-2  ">
                   {book.author}
                 </div>
-                <div className="text-sm text-black mb-2 ">{book.subTitle}</div>
+                <div className="text-sm text-[#394547] mb-2 ">
+                  {book.subTitle}
+                </div>
                 <div className="flex gap-2">
-                  <div className="flex items-center gap-1 text-sm font-light text-gray-400 ">
+                  <div className="flex items-center gap-1 text-sm font-light text-[#6b757b] ">
                     <div className="flex w-4 h-4 ">
                       <AccessTimeRoundedIcon className="w-full h-full " />
                     </div>
                     <div>03:24</div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm font-light text-gray-400">
+                  <div className="flex items-center gap-1 text-sm font-light text-[#6b757b]">
                     <div className="flex w-4 h-4 ">
                       <StarOutlineOutlinedIcon className="w-full h-full" />
                     </div>

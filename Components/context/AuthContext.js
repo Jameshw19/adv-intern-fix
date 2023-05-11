@@ -1,12 +1,15 @@
-import { auth, db } from "@/firebase";
+import { auth, db, googleAuthProvider } from "@/firebase";
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  getAuth,
   onAuthStateChanged,
   signInAnonymously,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
@@ -17,6 +20,7 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const { push } = useRouter();
 
   // console.log(user);
 
@@ -52,6 +56,35 @@ export const AuthContextProvider = ({ children }) => {
         default:
           errorMessage = "Something went wrong";
       }
+      alert(errorMessage);
+      throw error;
+    }
+  };
+
+  const signUpWithGoogle = async () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        // User does not exist, create a new account
+        await setDoc(userRef, {
+          email: user.email,
+        });
+      }
+
+      // Redirect to the /foryoupage if on the home page
+      if (location.pathname === "/") {
+        push("/foryoupage");
+      }
+    } catch (error) {
+      let errorMessage = "Something went wrong";
       alert(errorMessage);
       throw error;
     }
@@ -120,18 +153,26 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
-  const { push } = useRouter();
-
   const authContextValue = {
     signUp,
     logIn,
     guestLogin,
     logOut,
     user,
+    signUpWithGoogle,
   };
 
   return (
-    <AuthContext.Provider value={{ signUp, logIn, guestLogin, logOut, user }}>
+    <AuthContext.Provider
+      value={{
+        signUp,
+        logIn,
+        guestLogin,
+        logOut,
+        signUpWithGoogle,
+        user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

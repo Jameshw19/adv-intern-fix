@@ -8,6 +8,7 @@ function BookPage() {
   const router = useRouter();
   const { id } = router.query;
   const [bookData, setBookData] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -25,30 +26,24 @@ function BookPage() {
     getData();
   }, [id]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth > 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
-      <div className="relative flex flex-col ml-[200px] transition-all ">
+      <div className="relative flex flex-col ml-[200px] transition-all max-md:ml-0 max-md:w-full ">
         <ForYouHeader />
-        <ForYouSideBar />
+        {showSidebar && <ForYouSideBar />}
         <BookMain bookData={bookData} bookid={id} />
       </div>
     </>
   );
 }
-
-// export async function getServerSideProps({ params }) {
-//   const router = useRouter();
-//   const { id } = router.query;
-//   console.log(id);
-
-//   const response = await fetch(
-//     `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`
-//   );
-//   const bookData = await response.json();
-
-//   return {
-//     props: { bookData },
-//   };
-// }
 
 export default BookPage;

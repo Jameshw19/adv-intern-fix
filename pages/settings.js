@@ -17,8 +17,11 @@ function settings() {
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isUser, isUserLoading] = useAuthState(firebase.auth());
   const userIsPremium = usePremiumStatus(user);
   const userIsPremiumPlus = usePremiumStatus(user);
+
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -41,14 +44,25 @@ function settings() {
     return setIsSubscribed;
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth > 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <ForYouHeader />
-      <ForYouSideBar />
+      {showSidebar && <ForYouSideBar />}
       {user ? (
         <div
           className="relative flex flex-col ml-[200px] w-[calc(100%-200px)]
-       transition"
+       transition
+       max-md:ml-0 max-md:w-full
+       "
         >
           <div className="py-10 w-full">
             <div className="max-w-[1070px] w-full my-0 mx-auto px-6">
@@ -80,15 +94,14 @@ function settings() {
                         <div className="text-[#032b41]">Basic</div>
                         <button
                           onClick={handleUpgradePlan}
-                          className="bg-[#2bd97c] text-black w-[200px] h-10 rounded text-base flex items-center justify-center min-w-[180px]
-    cursor-pointer outline-none border-none"
+                          className="bg-[#2bd97c] text-black w-[200px] h-10 rounded text-base flex items-center justify-center min-w-[180px] cursor-pointer outline-none border-none"
                         >
                           <span className="text-base text-black">
                             Upgrade to Premium
                           </span>
                         </button>
                       </>
-                    ) : userIsPremiumPlus ? (
+                    ) : userIsPremiumPlus && !userIsPremium ? (
                       <div className="text-[#032b41]">Premium Plus</div>
                     ) : (
                       <div className="text-[#032b41]">Premium</div>
@@ -106,35 +119,36 @@ function settings() {
           </div>
         </div>
       ) : (
-        <div
-          className="relative flex flex-col ml-[200px] w-[calc(100%-200px)]
-       transition"
-        >
-          <div className="py-10 w-full">
-            <div className="max-w-[1070px] w-full my-0 mx-auto px-6">
-              <div className="text-left border-b-[1px] pb-4 text-3xl text-[#032b41] mb-8 font-bold ">
-                Settings
-              </div>
-              <div className="max-w-[460px] flex flex-col items-center m-auto">
-                <img
-                  className="w-full h-full"
-                  src="https://summarist.vercel.app/_next/image?url=%2F_n…2Fstatic%2Fmedia%2Flogin.e313e580.png&w=3840&q=75"
-                  alt=""
-                />
-                <div className="text-2xl font-bold text-[#032b41] text-center mb-4">
-                  Log in to your account to see your details.
+        <>
+          <div className="relative flex flex-col ml-[200px] w-[calc(100%-200px)] transition max-md:ml-0 max-md:w-full">
+            <div className="py-10 w-full">
+              <div className="max-w-[1070px] w-full my-0 mx-auto px-6">
+                <div className="text-left border-b-[1px] pb-4 text-3xl text-[#032b41] mb-8 font-bold max-md:text-2xl ">
+                  Settings
                 </div>
-                <button
-                  onClick={handleOpenModal}
-                  className="w-[100px] bg-[#2bd97c] text-[#032b41] h-10 rounded text-base flex items-center justify-center min-w-[180px]"
-                >
-                  Login
-                </button>
-                {openModal && <SignIn handleCloseModal={handleCloseModal} />}
+                <div className="max-w-[460px] flex flex-col items-center m-auto">
+                  <img
+                    className="w-full h-full"
+                    src="https://summarist.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogin.e313e580.png&w=3840&q=75"
+                    alt=""
+                  />
+                  <div className="text-2xl font-bold text-[#032b41] text-center mb-4">
+                    Log in to your account to see your details.
+                  </div>
+                  <button
+                    onClick={handleOpenModal}
+                    className="w-[100px] bg-[#2bd97c] text-[#032b41] h-10 rounded text-base flex items-center justify-center min-w-[180px]
+                  transition hover:bg-[#20ba68] hover:ease-in
+                  "
+                  >
+                    Login
+                  </button>
+                  {openModal && <SignIn handleCloseModal={handleCloseModal} />}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

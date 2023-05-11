@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import SignUp from "./SignUp";
 import { useRouter } from "next/router";
 import { UserAuth } from "@/Components/context/AuthContext";
+import Spinner from "@/Components/Spinner";
 
 function SignIn({ handleCloseModal }) {
-  const { logIn, guestLogin } = UserAuth();
+  const { logIn, guestLogin, signUpWithGoogle } = UserAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signUpModal, setSignUpModal] = useState(false);
+  const [emailClicked, setEmailClicked] = useState(false);
+  const [passwordClicked, setPasswordClicked] = useState(false);
+  const [isGuestLoginLoading, setIsGuestLoginLoading] = useState(false);
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
+
   const { push } = useRouter();
 
   const closeModal = () => {
@@ -25,16 +31,33 @@ function SignIn({ handleCloseModal }) {
     e.preventDefault();
     try {
       await logIn(email, password);
+      // Continue with your desired actions after login
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleGuestLogin = async () => {
+  const handleGoogleSignIn = async () => {
     try {
-      await guestLogin();
+      setIsGoogleLoginLoading(true);
+      await signUpWithGoogle();
+      // Continue with your desired actions after Google sign-in
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsGoogleLoginLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    try {
+      setIsGuestLoginLoading(true);
+      await guestLogin();
+      // Continue with your desired actions after guest login
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsGuestLoginLoading(false);
     }
   };
 
@@ -43,72 +66,110 @@ function SignIn({ handleCloseModal }) {
       {signUpModal ? (
         <SignUp handleCloseModal={handleCloseModal} />
       ) : (
-        <div className="w-full z-[9999] fixed top-0 left-0 bg-slate-900 bg-opacity-50 h-full flex justify-center items-center flex-col ">
-          <div className="relative max-w-[400px] bg-white rounded-lg w-full z-[9999] ">
-            <div className="pt-12 pr-8 pb-5 pl-8">
-              <div className="text-center text-lg font-bold text-black mb-5">
+        <div className="w-full z-[9999] fixed top-0 left-0 bg-[rgba(0,0,0,.75)] h-full flex justify-center items-center flex-col ">
+          <div className="relative max-w-[400px] bg-[#fff] rounded-lg w-full z-[9999] shadow-[0,0,10px,rgba(0,0,0,.2)] ">
+            <div className="pt-12 pr-8 pb-6 pl-8">
+              <div className="text-center text-[20px] font-bold text-[#394547] mb-6">
                 Log in to Summarist
               </div>
               <button
                 onClick={handleGuestLogin}
-                className="relative flex bg-blue-800 text-white justify-center w-full h-10 rounded text-lg items-center min-w-[180px]"
+                className="relative flex bg-[#3a579d] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
+                hover:bg-[#25397b] hover:ease-in transition
+                "
               >
                 <div className="bg-transparent flex items-center justify-center w-9  h-9 rounded absolute left-[2px]">
-                  <PersonIcon className="w-8 h-8" />
+                  <PersonIcon className="w-9 h-9" />
                 </div>
-                <div>Login as a guest</div>
+                {isGuestLoginLoading ? (
+                  <Spinner />
+                ) : (
+                  <div>Login as a Guest</div>
+                )}
               </button>
-              <div className="flex items-center justify-center my-4 mx-0 ">
-                <span className="mx-5 text-sm text-black font-medium">or</span>
+              <div
+                className="flex items-center justify-center my-4 mx-0 
+              before:content-[''] before:block before:flex-grow before:h-[1px] before:bg-[#bac8ce]
+              after:content-[''] after:block after:flex-grow after:h-[1px] after:bg-[#bac8ce]
+              
+               "
+              >
+                <span className="mx-6 text-sm text-[#394547] font-medium">
+                  or
+                </span>
               </div>
-              <button className="relative flex bg-blue-600 text-white justify-center w-full h-10 rounded text-lg items-center min-w-[180px]">
-                <div className="flex items-center justify-center w-9 h-9 rounded bg-white absolute left-[2px]">
+              <button
+                onClick={handleGoogleSignIn}
+                className="relative flex bg-[#4285f4] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
+              hover:bg-[#3367d6] hover:ease-in transition
+              "
+              >
+                <div className="flex items-center justify-center w-9 h-9 rounded bg-[#fff] absolute left-[2px]">
                   <img
                     className="rounded"
-                    src="http://expresswriters.com/wp-content/uploads/2015/09/google-new-logo-450x450.jpg"
+                    src="https://images.theconversation.com/files/93616/original/image-20150902-6700-t2axrz.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1000&fit=clip"
                     alt="googleLogo"
                   />
                 </div>
-                <div>Login with google</div>
+                {isGoogleLoginLoading ? (
+                  <Spinner />
+                ) : (
+                  <div>Login with Google</div>
+                )}
               </button>
-              <div className="flex items-center justify-center my-4 mx-0 ">
-                <span className="mx-5 text-sm text-black font-medium">or</span>
+              <div
+                className="flex items-center justify-center my-4 mx-0
+              before:content-[''] before:block before:flex-grow before:h-[1px] before:bg-[#bac8ce]
+              after:content-[''] after:block after:flex-grow after:h-[1px] after:bg-[#bac8ce]
+              "
+              >
+                <span className="mx-6 text-sm text-[#394547] font-medium">
+                  or
+                </span>
               </div>
               <div className="flex flex-col gap-4">
                 <input
+                  onClick={() => setEmailClicked(true)}
+                  onBlur={() => setEmailClicked(false)}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-10 border-gray-300 border-[2px] rounded text-black px-3 outline-none"
+                  className={`h-10  border-[2px] rounded text-[#394547] px-3 outline-none ${
+                    emailClicked ? "border-[#2bd97c]" : "border-[#bac8ce] "
+                  } `}
                   type="text"
                   placeholder="guest@gmail.com"
                 ></input>
                 <input
+                  onClick={() => setPasswordClicked(true)}
+                  onBlur={() => setPasswordClicked(false)}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="h-10 border-gray-300 border-[2px] rounded text-black px-3 outline-none"
+                  className={`h-10  border-[2px] rounded text-[#394547] px-3 outline-none ${
+                    passwordClicked ? "border-[#2bd97c]" : "border-[#bac8ce] "
+                  } `}
                   type="password"
                   placeholder="guest123"
                 ></input>
 
                 <button
                   onClick={handleLogin}
-                  className="bg-green-500 text-black w-full h-10 rounded text-lg flex items-center justify-center
-                     min-w-[180px] transition hover:bg-green-400"
+                  className="bg-[#2bd97c] text-[#394547] w-full h-10 rounded text-lg flex items-center justify-center
+                     min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in"
                 >
                   <span>Login</span>
                 </button>
               </div>
             </div>
-            <div className="text-center text-blue-600 font-light text-sm w-fit mx-auto mb-4 mt-0 cursor-pointer">
+            <div className="text-center text-[#116be9] font-light text-sm w-fit mx-auto mb-4 mt-0 cursor-pointer ">
               Forgot your password?
             </div>
             <div
               onClick={openSignUpModal}
-              className="h-10 text-center bg-gray-100 text-blue-600 w-full rounded-b pt-1 font-light text-base cursor-pointer
+              className="h-10 text-center bg-[#f1f6f4] text-[#116be9] w-full rounded-b pt-2 font-light text-base cursor-pointer
               transition hover:bg-gray-200"
             >
               Dont have an account?
             </div>
-            <div className="absolute top-3 right-3 flex cursor-pointer transition hover:text-gray-500 ">
-              <CloseIcon onClick={closeModal} />
+            <div className="absolute top-3 right-3 flex cursor-pointer transition hover:opacity-[.5] hover:ease-in ">
+              <CloseIcon className="h-[30px] w-[30px]" onClick={closeModal} />
             </div>
           </div>
         </div>

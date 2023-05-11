@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Book from "./Book";
 import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 import SuggestedBook from "./SuggestedBook";
@@ -32,7 +32,7 @@ function ForYouMain() {
       <div className="max-w-5xl w-full m-auto px-5">
         <div className="py-10 w-full ">
           <div>
-            <div className="text-2xl font-bold text-black mb-4">
+            <div className="text-2xl font-bold text-[#032b41] mb-4">
               Selected Just For You
             </div>
             {isLoading ? (
@@ -43,11 +43,11 @@ function ForYouMain() {
                   <div className="flex gap-4 w-3/5 ">
                     <div className="h-[140px] w-[140px] min-w-[140px] bg-gray-200"></div>
                     <div className="w-full ">
-                      <div className="font-semibold text-black mb-2 bg-gray-200 h-4"></div>
-                      <div className="text-sm text-black mb-4 bg-gray-200 h-4"></div>
+                      <div className="font-semibold text-[#032b41] mb-2 bg-gray-200 h-4"></div>
+                      <div className="text-sm text-[#032b41] mb-4 bg-gray-200 h-4"></div>
                       <div className="flex items-center gap-2 ">
                         <div className="flex items-center w-10 min-w-[10px] h-10 bg-gray-200"></div>
-                        <div className="text-sm font-medium text-black bg-gray-200 h-4"></div>
+                        <div className="text-sm font-medium text-[#032b41] bg-gray-200 h-4"></div>
                       </div>
                     </div>
                   </div>
@@ -59,29 +59,32 @@ function ForYouMain() {
                   <Link href={"/book/" + book.id} key={book.id} bookData={book}>
                     <div
                       key={book.id}
-                      className="flex justify-between max-w-3xl bg-amber-100 rounded p-6 mb-6 gap-6 w-full"
+                      className="flex justify-between max-w-3xl bg-[#fbefd6] rounded p-6 mb-6 gap-6 w-full 
+                      max-md:p-4 max-md:w-full max-md:flex-col max-md:gap-6 "
                     >
-                      <div className="text-black w-2/5">{book.subTitle}</div>
-                      <div className="w-[1px] bg-gray-300"></div>
-                      <div className="flex gap-4 w-3/5 ">
+                      <div className="text-[#032b41] w-2/5 max-md:w-full max-md:text-sm">
+                        {book.subTitle}
+                      </div>
+                      <div className="w-[1px] bg-[#bac8ce] max-md:hidden"></div>
+                      <div className="flex gap-4 w-3/5 max-md:w-full ">
                         <div className="h-[140px] w-[140px] min-w-[140px]">
                           <img src={book.imageLink} alt="bookImg" />
                         </div>
-                        <div className="w-full ">
-                          <div className="font-semibold text-black mb-2 ">
+                        <div className="w-full max-md:w-full ">
+                          <div className="font-semibold text-[#032b41] mb-2 ">
                             {book.title}
                           </div>
-                          <div className="text-sm text-black mb-4 ">
+                          <div className="text-sm text-[#394547] mb-4 ">
                             {book.author}
                           </div>
                           <div className="flex items-center gap-2 ">
                             <div className="flex items-center w-10 min-w-[10px] h-10">
                               <PlayCircleRoundedIcon
-                                className="w-full h-full bg-black text-white flex justify-center
+                                className="w-full h-full bg-[#000] text-[#fff] flex justify-center
                       rounded-[50%] items-center py-1 pr-1 pl-[6px]  "
                               />
                             </div>
-                            <div className="text-sm font-medium text-black">
+                            <div className="text-sm font-medium text-[#032b41]">
                               3 mins 23 secs
                             </div>
                           </div>
@@ -94,10 +97,10 @@ function ForYouMain() {
             )}
 
             <div>
-              <div className="text-2xl font-bold text-black mb-4 ">
+              <div className="text-2xl font-bold text-[#032b41] mb-4 ">
                 Recommended For You
               </div>
-              <div className="font-light text-black mb-4 ">
+              <div className="font-light text-[#032b41] mb-4 ">
                 We think You'll like these
               </div>
               <div className="flex overflow-x-auto scrollbar-hide snap-x mb-8  ">
@@ -105,10 +108,10 @@ function ForYouMain() {
               </div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-black mb-4 ">
+              <div className="text-2xl font-bold text-[#032b41] mb-4 ">
                 Suggested Books
               </div>
-              <div className="font-light text-black mb-4 ">
+              <div className="font-light text-[#032b41] mb-4 ">
                 Browse Those Books
               </div>
               <div className="flex overflow-x-auto scrollbar-hide snap-x mb-8  ">

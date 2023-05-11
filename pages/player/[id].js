@@ -8,6 +8,7 @@ function BookPage() {
   const router = useRouter();
   const [bookData, setBookData] = useState([]);
   const { id } = router.query;
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -25,11 +26,22 @@ function BookPage() {
     getData();
   }, [id]);
 
+  // h-[calc(100vh-60px)]
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth > 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
-      <div className="relative flex flex-col ml-[200px] transition-all ">
+      <div className="relative flex flex-col ml-[200px] transition-all max-md:ml-0 max-md:w-full ">
         <ForYouHeader />
-        <ForYouSideBar />
+        {showSidebar && <ForYouSideBar />}
         <PlayerMain bookData={bookData} bookid={id} />
       </div>
     </>

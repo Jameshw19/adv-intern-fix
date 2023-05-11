@@ -1,14 +1,18 @@
 import SearchIcon from "@mui/icons-material/Search";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Link from "next/link";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ForYouSideBar from "./ForYouSideBar";
 
 function ForYouHeader() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState(false);
   const [searchTimeout, setSearchTimeout] = useState(null);
-
+  const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     async function fetchSearchResults() {
@@ -40,35 +44,84 @@ function ForYouHeader() {
     );
   }
 
+  function handleSearchInputFocus() {
+    setIsFocused(true);
+  }
+
+  function handleSearchInputBlur() {
+    setIsFocused(false);
+  }
+
+  function handleClearSearch() {
+    setSearchQuery("");
+    setSearchResults(false);
+  }
+
+  function toggleSidebar() {
+    setShowSidebar(!showSidebar);
+  }
+
+  const closeSidebar = () => {
+    setShowSidebar(false);
+  };
+
   return (
     <>
-      <div className="bg-white border-b h-20 z-[1]   ">
-        <div className="relative flex items-center justify-between px-8 max-w-[1070px] m-auto h-full  ">
+      <div className="bg-[#fff] border-b border-[#e1e7ea] h-20 z-[1]   ">
+        <div className="relative flex items-center justify-between px-8 max-w-[1070px] m-auto h-full   ">
           <img
-            className="h-[132px] w-[132px] "
-            // src="https://cdn.dribbble.com/users/846370/screenshots/6761160/logo_1501.jpg "
+            className="h-[132px] w-[132px] max-md:h-0 max-md:w-0 "
+            src=""
             alt="logo"
           />
-          <div className="flex items-center gap-6 max-w-[340px] w-full ">
+          <div className="flex items-center gap-6 max-w-[340px] w-full  ">
             <div className="flex items-center w-full">
               <div className="flex items-center w-full relative gap-2">
                 <input
                   value={searchQuery}
                   onChange={handleSearchInputChange}
-                  className="h-10 w-full px-4 outline-none bg-gray-100 border-2 border-gray-200 text-black rounded-lg"
+                  onFocus={handleSearchInputFocus}
+                  onBlur={handleSearchInputBlur}
+                  className="h-10 w-full px-4 outline-none bg-[#f1f6f4] border-2 border-[#e1e7ea] text-[#03314b] rounded-lg"
                   placeholder=" Search For Books"
                   type="text"
                 ></input>
-                <div className="flex items-center absolute h-full right-2 justify-end border-l-2 border-solid border-gray-200 pl-2">
-                  <SearchIcon className="w-7 h-7 text-black" />
+                <div className="flex items-center absolute h-full right-2 justify-end border-l-2 border-solid border-[#e1e7ea] pl-2">
+                  {searchQuery ? (
+                    <CloseIcon
+                      onClick={handleClearSearch}
+                      className="w-7 h-7 text-[#03314b]"
+                    />
+                  ) : (
+                    <SearchIcon className="w-7 h-7 text-[#03314b]" />
+                  )}
                 </div>
               </div>
             </div>
+
+            <div className="items-center justify-center cursor-pointer hidden max-md:flex">
+              <MenuIcon onClick={toggleSidebar} className="h-7 w-7" />
+            </div>
+            {showSidebar && (
+              <>
+                <ForYouSideBar />
+              </>
+            )}
+
+            {showSidebar && (
+              <>
+                <div
+                  onClick={closeSidebar}
+                  className="fixed top-0 left-0 w-full h-full bg-[#3a4649] z-[10] opacity-[.65] pointer-events-auto 
+                  transition ease-in duration-[.5]"
+                ></div>
+              </>
+            )}
           </div>
           {searchResults && (
             <div
               className="flex flex-col max-w-[440px] w-full max-h-[640px] ml-auto overflow-y-auto p-4 absolute top-[104px] 
-             right-[24px] bg-white border-[1px] border-[#e1e7ea]"
+             right-[24px] bg-[#fff] border-[1px] border-[#e1e7ea] max-md:max-w-[unset] max-md:right-0"
             >
               {results.length === 0 ? (
                 <div className="text-base font-medium text-[#032b41]">
