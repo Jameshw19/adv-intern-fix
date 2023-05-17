@@ -13,6 +13,18 @@ function ForYouHeader() {
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState([]);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    const isInitialLoad = localStorage.getItem("isInitialLoad");
+    if (isInitialLoad === null || isInitialLoad === "true") {
+      localStorage.setItem("isInitialLoad", "false");
+    } else {
+      setIsLoadingComplete(true);
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchSearchResults() {
@@ -21,19 +33,33 @@ function ForYouHeader() {
       );
       const data = await response.json();
       setResults(data);
+      setIsLoading(false);
+      setIsLoadingComplete(true);
     }
+
     if (searchQuery) {
-      fetchSearchResults();
+      setIsLoading(true);
+      setIsLoadingComplete(false);
+
+      // Delay the API request to simulate loading
+      const timeoutId = setTimeout(() => {
+        fetchSearchResults();
+      }, 800);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
     } else {
       setResults([]);
     }
   }, [searchQuery]);
 
-  function handleSearchInputChange(event) {
-    setSearchQuery(event.target.value);
-    setSearchResults(event.target.value !== "");
+  const handleSearchInputChange = (event) => {
+    const inputValue = event.target.value;
+    setSearchQuery(inputValue);
+    setSearchResults(inputValue !== "");
 
-    // debounce search input
+    // Debounce search input
     if (searchTimeout) {
       clearTimeout(searchTimeout);
     }
@@ -42,7 +68,7 @@ function ForYouHeader() {
         setSearchTimeout(null);
       }, 300)
     );
-  }
+  };
 
   function handleSearchInputFocus() {
     setIsFocused(true);
@@ -65,9 +91,13 @@ function ForYouHeader() {
     setShowSidebar(false);
   };
 
+  useEffect(() => {
+    setIsInitialLoad(false);
+  }, []);
+
   return (
     <>
-      <div className="bg-[#fff] border-b border-[#e1e7ea] h-20 z-[1]   ">
+      <div className="bg-[#fff] border-b border-[#e1e7ea] h-20 z-[1]">
         <div className="relative flex items-center justify-between px-8 max-w-[1070px] m-auto h-full   ">
           <img
             className="h-[132px] w-[132px] max-md:h-0 max-md:w-0 "
@@ -82,8 +112,8 @@ function ForYouHeader() {
                   onChange={handleSearchInputChange}
                   onFocus={handleSearchInputFocus}
                   onBlur={handleSearchInputBlur}
-                  className="h-10 w-full px-4 outline-none bg-[#f1f6f4] border-2 border-[#e1e7ea] text-[#03314b] rounded-lg"
-                  placeholder=" Search For Books"
+                  className="h-10 w-full px-4 outline-none bg-[#f1f6f4] border-2 border-[#e1e7ea] text-[#042330] rounded-lg"
+                  placeholder=" Search for books"
                   type="text"
                 ></input>
                 <div className="flex items-center absolute h-full right-2 justify-end border-l-2 border-solid border-[#e1e7ea] pl-2">
@@ -118,43 +148,63 @@ function ForYouHeader() {
               </>
             )}
           </div>
-          {searchResults && (
-            <div
-              className="flex flex-col max-w-[440px] w-full max-h-[640px] ml-auto overflow-y-auto p-4 absolute top-[104px] 
-             right-[24px] bg-[#fff] border-[1px] border-[#e1e7ea] max-md:max-w-[unset] max-md:right-0"
-            >
-              {results.length === 0 ? (
-                <div className="text-base font-medium text-[#032b41]">
-                  No books found
-                </div>
-              ) : (
-                results.map((book) => (
-                  <Link href={"/book/" + book.id} bookData={book}>
-                    <div className="flex items-center p-4 gap-6 h-[120px] border-b-[1px] border-b-[#e1e7ea] ">
-                      <div className="h-20 w-20 min-w-[80px]">
-                        <img src={book.imageLink} alt="" />
-                      </div>
-                      <div>
-                        <div className="text-base font-medium text-[#032b41] mb-2">
-                          {book.title}
-                        </div>
-                        <div className="text-sm font-light text-[#6b757b] mb-2">
-                          {book.author}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-1 text-sm font-light text-[#6b757b] ">
-                            <div className="flex w-4 h-4">
-                              <AccessTimeIcon className="w-full h-full" />
+          {isLoading && searchQuery !== "" && !isLoadingComplete ? (
+            <>
+              <div
+                className="flex flex-col max-w-[440px] w-full max-h-[640px] ml-auto overflow-y-auto p-4 absolute top-[104px] 
+              right-[24px] bg-[#fff] border-[1px] border-[#e1e7ea] max-md:max-w-[unset] max-md:right-0 z-[9]"
+              >
+                {[...Array(5)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center p-4 gap-6 h-[120px] border-b-[1px] border-b-[#e1e7ea] animate-pulse"
+                  >
+                    <div className="h-[110px] w-[600px] min-w-[80px] bg-gray-200"></div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              {searchResults && (
+                <div
+                  className="flex flex-col max-w-[440px] w-full max-h-[640px] ml-auto overflow-y-auto p-4 absolute top-[104px] 
+                right-[24px] bg-[#fff] border-[1px] border-[#e1e7ea] max-md:max-w-[unset] max-md:right-0 z-[9]"
+                >
+                  {results.length === 0 ? (
+                    <div className="text-base font-medium text-[#032b41]">
+                      No books found
+                    </div>
+                  ) : (
+                    results.map((book) => (
+                      <Link href={"/book/" + book.id} bookData={book}>
+                        <div className="flex items-center p-4 gap-6 h-[120px] border-b-[1px] border-b-[#e1e7ea] hover:bg-[#f1f6f4] ">
+                          <div className="h-20 w-20 min-w-[80px]">
+                            <img src={book.imageLink} alt="" />
+                          </div>
+                          <div>
+                            <div className="text-base font-medium text-[#032b41] mb-2">
+                              {book.title}
                             </div>
-                            <div>03:02</div>
+                            <div className="text-sm font-light text-[#6b757b] mb-2">
+                              {book.author}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-1 text-sm font-light text-[#6b757b] ">
+                                <div className="flex w-4 h-4">
+                                  <AccessTimeIcon className="w-full h-full" />
+                                </div>
+                                <div>03:02</div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))
+                      </Link>
+                    ))
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
         </div>
       </div>

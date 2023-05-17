@@ -20,7 +20,7 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
-  const { push } = useRouter();
+  const router = useRouter();
 
   // console.log(user);
 
@@ -35,12 +35,12 @@ export const AuthContextProvider = ({ children }) => {
       if (password.length < 6) {
         throw new Error("Password should be at least 6 characters");
       }
-      //   console.log(user);
-      alert("Successfully created an Account!");
       const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        email: user.email,
-      });
+      await setDoc(userRef, { email: user.email });
+      // Redirect to "/foryoupage" if the user is on the home page
+      // if (router.pathname === "/") {
+      //   router.push("/foryoupage");
+      // }
     } catch (error) {
       let errorMessage = "";
       switch (error.code) {
@@ -80,9 +80,9 @@ export const AuthContextProvider = ({ children }) => {
       }
 
       // Redirect to the /foryoupage if on the home page
-      if (location.pathname === "/") {
-        push("/foryoupage");
-      }
+      // if (router.pathname === "/") {
+      //   router.push("/foryoupage");
+      // }
     } catch (error) {
       let errorMessage = "Something went wrong";
       alert(errorMessage);
@@ -99,10 +99,9 @@ export const AuthContextProvider = ({ children }) => {
       );
       const user = userCredential;
       //   console.log(user);
-      alert("Successfully Logged Into Your Account");
-      if (location.pathname === "/") {
-        push("/foryoupage");
-      }
+      // if (router.pathname === "/") {
+      //   router.push("/foryoupage");
+      // }
     } catch (error) {
       let errorMessage = "";
       switch (error.code) {
@@ -128,9 +127,10 @@ export const AuthContextProvider = ({ children }) => {
       const userCredential = await signInAnonymously(auth);
       const user = userCredential;
       // console.log(user);
-      if (location.pathname === "/") {
-        push("/foryoupage");
-      }
+      // const router = useRouter();
+      // if (router.pathname === "/") {
+      //   router.push("/foryoupage");
+      // }
     } catch (error) {
       let errorMessage = "";
       switch (error.code) {
@@ -143,11 +143,26 @@ export const AuthContextProvider = ({ children }) => {
     signOut(auth);
   };
 
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //     console.log("User", currentUser);
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       console.log("User", currentUser);
+
+      if (currentUser && router.pathname === "/") {
+        router.push("/foryoupage");
+      }
     });
+
     return () => {
       unsubscribe();
     };

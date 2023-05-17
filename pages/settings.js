@@ -8,20 +8,15 @@ import usePremiumStatus from "@/stripe/usePremiumStatus";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
-import { useAuthState } from "react-firebase-hooks/auth";
-
 function settings() {
   const { user } = UserAuth();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { push } = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [isUser, isUserLoading] = useAuthState(firebase.auth());
-  const userIsPremium = usePremiumStatus(user);
-  const userIsPremiumPlus = usePremiumStatus(user);
-
   const [showSidebar, setShowSidebar] = useState(false);
+
+  const userIsPremiumPlus = usePremiumStatus(user);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -89,22 +84,21 @@ function settings() {
                       Your Subscription plan
                     </div>
 
-                    {!userIsPremium ? (
+                    {!userIsPremiumPlus ? (
                       <>
                         <div className="text-[#032b41]">Basic</div>
                         <button
                           onClick={handleUpgradePlan}
-                          className="bg-[#2bd97c] text-black w-[200px] h-10 rounded text-base flex items-center justify-center min-w-[180px] cursor-pointer outline-none border-none"
+                          className="bg-[#2bd97c] text-black w-[200px] h-10 rounded text-base flex items-center 
+                          justify-center min-w-[180px] cursor-pointer outline-none border-none active:transform active:translate-y-[1px]"
                         >
                           <span className="text-base text-black">
                             Upgrade to Premium
                           </span>
                         </button>
                       </>
-                    ) : userIsPremiumPlus && !userIsPremium ? (
-                      <div className="text-[#032b41]">Premium Plus</div>
                     ) : (
-                      <div className="text-[#032b41]">Premium</div>
+                      <div className="text-[#032b41]">{userIsPremiumPlus}</div>
                     )}
                   </div>
                   <div className="flex flex-col items-start gap-2 pb-6">
@@ -138,8 +132,7 @@ function settings() {
                   <button
                     onClick={handleOpenModal}
                     className="w-[100px] bg-[#2bd97c] text-[#032b41] h-10 rounded text-base flex items-center justify-center min-w-[180px]
-                  transition hover:bg-[#20ba68] hover:ease-in
-                  "
+                  transition hover:bg-[#20ba68] hover:ease-in  active:transform active:translate-y-[1px]  "
                   >
                     Login
                   </button>

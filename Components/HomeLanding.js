@@ -33,7 +33,7 @@ function HomeLanding() {
                 <button
                   onClick={handleOpenModal}
                   className="bg-[#2bd97c] text-[#032b41] w-full flex items-center justify-center max-w-[300px] h-10 rounded text-base
-                  transition hover:bg-[#20ba68] hover:ease-in   "
+                  transition hover:bg-[#20ba68] hover:ease-in active:transform active:translate-y-[1px]   "
                 >
                   Login
                 </button>

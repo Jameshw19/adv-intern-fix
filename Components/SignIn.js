@@ -2,9 +2,9 @@ import PersonIcon from "@mui/icons-material/Person";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import SignUp from "./SignUp";
-import { useRouter } from "next/router";
 import { UserAuth } from "@/Components/context/AuthContext";
 import Spinner from "@/Components/Spinner";
+import Link from "next/link";
 
 function SignIn({ handleCloseModal }) {
   const { logIn, guestLogin, signUpWithGoogle } = UserAuth();
@@ -16,8 +16,7 @@ function SignIn({ handleCloseModal }) {
   const [passwordClicked, setPasswordClicked] = useState(false);
   const [isGuestLoginLoading, setIsGuestLoginLoading] = useState(false);
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
-
-  const { push } = useRouter();
+  const [isMailLoginLoading, setMailLoginLoading] = useState(false);
 
   const closeModal = () => {
     handleCloseModal(false);
@@ -30,10 +29,12 @@ function SignIn({ handleCloseModal }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      setMailLoginLoading(true);
       await logIn(email, password);
-      // Continue with your desired actions after login
+      closeModal();
     } catch (error) {
       console.log(error);
+      setMailLoginLoading(false);
     }
   };
 
@@ -41,7 +42,7 @@ function SignIn({ handleCloseModal }) {
     try {
       setIsGoogleLoginLoading(true);
       await signUpWithGoogle();
-      // Continue with your desired actions after Google sign-in
+      closeModal();
     } catch (error) {
       console.log(error);
     } finally {
@@ -53,7 +54,7 @@ function SignIn({ handleCloseModal }) {
     try {
       setIsGuestLoginLoading(true);
       await guestLogin();
-      // Continue with your desired actions after guest login
+      closeModal();
     } catch (error) {
       console.log(error);
     } finally {
@@ -72,21 +73,24 @@ function SignIn({ handleCloseModal }) {
               <div className="text-center text-[20px] font-bold text-[#394547] mb-6">
                 Log in to Summarist
               </div>
-              <button
-                onClick={handleGuestLogin}
-                className="relative flex bg-[#3a579d] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
-                hover:bg-[#25397b] hover:ease-in transition
+              <Link href="/foryoupage">
+                <button
+                  onClick={handleGuestLogin}
+                  className="relative flex bg-[#3a579d] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
+                hover:bg-[#25397b] hover:ease-in transition active:transform active:translate-y-[1px]
                 "
-              >
-                <div className="bg-transparent flex items-center justify-center w-9  h-9 rounded absolute left-[2px]">
-                  <PersonIcon className="w-9 h-9" />
-                </div>
-                {isGuestLoginLoading ? (
-                  <Spinner />
-                ) : (
-                  <div>Login as a Guest</div>
-                )}
-              </button>
+                >
+                  <div className="bg-transparent flex items-center justify-center w-9  h-9 rounded absolute left-[2px]">
+                    <PersonIcon className="w-9 h-9" />
+                  </div>
+                  {isGuestLoginLoading ? (
+                    <Spinner />
+                  ) : (
+                    <div>Login as a Guest</div>
+                  )}
+                </button>
+              </Link>
+
               <div
                 className="flex items-center justify-center my-4 mx-0 
               before:content-[''] before:block before:flex-grow before:h-[1px] before:bg-[#bac8ce]
@@ -98,25 +102,28 @@ function SignIn({ handleCloseModal }) {
                   or
                 </span>
               </div>
-              <button
-                onClick={handleGoogleSignIn}
-                className="relative flex bg-[#4285f4] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
-              hover:bg-[#3367d6] hover:ease-in transition
+              <Link href="/foryoupage">
+                <button
+                  onClick={handleGoogleSignIn}
+                  className="relative flex bg-[#4285f4] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
+              hover:bg-[#3367d6] hover:ease-in transition active:transform active:translate-y-[1px]
               "
-              >
-                <div className="flex items-center justify-center w-9 h-9 rounded bg-[#fff] absolute left-[2px]">
-                  <img
-                    className="rounded"
-                    src="https://images.theconversation.com/files/93616/original/image-20150902-6700-t2axrz.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1000&fit=clip"
-                    alt="googleLogo"
-                  />
-                </div>
-                {isGoogleLoginLoading ? (
-                  <Spinner />
-                ) : (
-                  <div>Login with Google</div>
-                )}
-              </button>
+                >
+                  <div className="flex items-center justify-center w-9 h-9 rounded bg-[#fff] absolute left-[2px]">
+                    <img
+                      className="rounded"
+                      src="https://images.theconversation.com/files/93616/original/image-20150902-6700-t2axrz.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1000&fit=clip"
+                      alt="googleLogo"
+                    />
+                  </div>
+                  {isGoogleLoginLoading ? (
+                    <Spinner />
+                  ) : (
+                    <div>Login with Google</div>
+                  )}
+                </button>
+              </Link>
+
               <div
                 className="flex items-center justify-center my-4 mx-0
               before:content-[''] before:block before:flex-grow before:h-[1px] before:bg-[#bac8ce]
@@ -148,14 +155,15 @@ function SignIn({ handleCloseModal }) {
                   type="password"
                   placeholder="guest123"
                 ></input>
-
-                <button
-                  onClick={handleLogin}
-                  className="bg-[#2bd97c] text-[#394547] w-full h-10 rounded text-lg flex items-center justify-center
-                     min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in"
-                >
-                  <span>Login</span>
-                </button>
+                <Link href="/foryoupage">
+                  <button
+                    onClick={handleLogin}
+                    className="bg-[#2bd97c] text-[#394547] w-full h-10 rounded text-lg flex items-center justify-center
+                     min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in active:transform active:translate-y-[1px]"
+                  >
+                    {isMailLoginLoading ? <Spinner /> : <div>Login </div>}
+                  </button>
+                </Link>
               </div>
             </div>
             <div className="text-center text-[#116be9] font-light text-sm w-fit mx-auto mb-4 mt-0 cursor-pointer ">

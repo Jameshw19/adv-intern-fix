@@ -33,7 +33,7 @@ function ForYouMain() {
         <div className="py-10 w-full ">
           <div>
             <div className="text-2xl font-bold text-[#032b41] mb-4">
-              Selected Just For You
+              Selected just for you
             </div>
             {isLoading ? (
               <>
@@ -100,8 +100,8 @@ function ForYouMain() {
               <div className="text-2xl font-bold text-[#032b41] mb-4 ">
                 Recommended For You
               </div>
-              <div className="font-light text-[#032b41] mb-4 ">
-                We think You'll like these
+              <div className="font-light   mb-4 ">
+                We think you'll like these
               </div>
               <div className="flex overflow-x-auto scrollbar-hide snap-x mb-8  ">
                 <Book />
@@ -111,7 +111,7 @@ function ForYouMain() {
               <div className="text-2xl font-bold text-[#032b41] mb-4 ">
                 Suggested Books
               </div>
-              <div className="font-light text-[#032b41] mb-4 ">
+              <div className="font-light text-[#394547] mb-4 ">
                 Browse Those Books
               </div>
               <div className="flex overflow-x-auto scrollbar-hide snap-x mb-8  ">

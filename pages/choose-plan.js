@@ -3,7 +3,7 @@ import SpaIcon from "@mui/icons-material/Spa";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "@/Components/Footer";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createCheckoutSession } from "@/stripe/createCheckoutSession";
@@ -11,6 +11,7 @@ import { UserAuth } from "@/Components/context/AuthContext";
 import usePremiumStatus from "@/stripe/usePremiumStatus";
 import { getAuth } from "firebase/auth";
 import SignIn from "@/Components/SignIn";
+import { useRouter } from "next/router";
 
 function ChoosePlan() {
   const { user } = UserAuth();
@@ -20,13 +21,19 @@ function ChoosePlan() {
   const [isDivShown1, setIsDivShown1] = useState(false);
   const [isDivShown2, setIsDivShown2] = useState(false);
   const [isDivShown3, setIsDivShown3] = useState(false);
-  const [expandIcon, setExpandIcon] = useState(<ExpandMoreIcon />);
 
   const [selectedPlan, setSelectedPlan] = useState(1);
   const [openModal, setOpenModal] = useState(false);
 
   const [isUser, userLoading] = useAuthState(auth);
   const userIsPremium = usePremiumStatus(isUser);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userIsPremium) {
+      router.push("/foryoupage");
+    }
+  }, [userIsPremium]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -45,38 +52,53 @@ function ChoosePlan() {
 
   const toggleDiv0 = () => {
     setIsDivShown0(!isDivShown0);
-    setExpandIcon(isDivShown0 ? <ExpandMoreIcon /> : <ExpandLessIcon />);
+    setIsDivShown1(false);
+    setIsDivShown2(false);
+    setIsDivShown3(false);
   };
+
   const toggleDiv1 = () => {
+    setIsDivShown0(false);
     setIsDivShown1(!isDivShown1);
+    setIsDivShown2(false);
+    setIsDivShown3(false);
   };
+
   const toggleDiv2 = () => {
+    setIsDivShown0(false);
+    setIsDivShown1(false);
     setIsDivShown2(!isDivShown2);
+    setIsDivShown3(false);
   };
+
   const toggleDiv3 = () => {
+    setIsDivShown0(false);
+    setIsDivShown1(false);
+    setIsDivShown2(false);
     setIsDivShown3(!isDivShown3);
   };
 
   return (
     <>
-      <div className="ml-0 w-full relative flex max-md:ml-0 max-md:w-full ">
-        <div className="opacity-0 pointer-events-none fixed top-0 left-0 w-full h-full bg-[#3a4649] z-10"></div>
+      <div className="ml-0 w-full relative flex flex-col transition-all duration-[0.3] max-md:ml-0 max-md:w-full ">
+        {/* <div className="opacity-0 pointer-events-none fixed top-0 left-0 w-full h-full bg-[#3a4649] z-10"></div> */}
         <div className="w-full">
           <div
             className="relative text-center w-full pt-12 mb-6 
           before:content-none before:absolute before:top-0 before:left-0 before:z-[-1] before:w-full before:h-full before:bg-[#032b41]
+          before:rounded-b-[16rem]
           before:max-md:rounded-b-none
           "
           >
             <div className="absolute top-0 left-0 z-[-1] w-full h-full bg-[#032b41] rounded-b-[16rem]"></div>
-            <div className="max-w-[1000px] m-auto text-white px-5">
+            <div className="max-w-[1000px] m-auto text-white px-6">
               <div className="text-5xl font-bold mb-10 max-md:text-[26px] max-md:mb-8">
-                Unlimited access to many amazing books to read
+                Get unlimited access to many amazing books to read
               </div>
               <div className="text-xl mb-8 max-md:text-base">
                 Turn ordinary moments into amazing learning opportunities
               </div>
-              <div className="flex justify-center max-w-[340px] m-auto  overflow-hidden">
+              <div className="flex justify-center max-w-[340px] m-auto overflow-hidden rounded-t-[180px]">
                 <img
                   className="w-full h-full"
                   src="https://summarist.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fpricing-top.4d86e93a.png&w=1920&q=75"
@@ -197,7 +219,7 @@ function ChoosePlan() {
                           <button
                             onClick={handleSubscriptionClick}
                             className="bg-[#2bd97c] text-black w-[300px] h-10 rounded text-base flex items-center justify-center min-w-[180px]
-                        cursor-pointer outline-none border-none"
+                        cursor-pointer outline-none border-none active:transform active:translate-y-[1px]"
                           >
                             <span className="text-base text-black">
                               {selectedPlan === "premiumYearly"
@@ -215,7 +237,7 @@ function ChoosePlan() {
                           <button
                             onClick={handleOpenModal}
                             className="bg-[#2bd97c] text-black w-[300px] h-10 rounded text-base flex items-center justify-center min-w-[180px]
-                        cursor-pointer outline-none border-none"
+                        cursor-pointer outline-none border-none active:transform active:translate-y-[1px]"
                           >
                             <span className="text-base text-black">
                               {selectedPlan === "premiumYearly"
@@ -234,7 +256,7 @@ function ChoosePlan() {
                 {selectedPlan ? (
                   <div className="text-xs text-[#6b757b] text-center">
                     {selectedPlan === "premiumYearly"
-                      ? "Cancel your trial at any time before it ends, and you won’t be charged"
+                      ? "Cancel your trial at any time before it ends, and you won’t be charged."
                       : "30-day money back guarantee, no questions asked."}
                   </div>
                 ) : null}
@@ -249,15 +271,15 @@ function ChoosePlan() {
                     <div className="font-medium text-2xl relative mb-0 text-[#032b41] max-md:text-xl ">
                       How does the free 7-day trial work?
                     </div>
-                    {isDivShown0 ? (
-                      <ExpandLessIcon className="w-10 h-10 min-w-[24px] transition duration-[.35] ease-in" />
-                    ) : (
-                      <ExpandMoreIcon className="w-10 h-10 min-w-[24px] transition duration-[.35] ease-in" />
-                    )}
+                    <ExpandMoreIcon
+                      className={`w-10 h-10 min-w-[24px] transition-transform duration-[.35] ease-in
+                    ${isDivShown0 ? "rotate-180" : ""}
+                    `}
+                    />
                   </div>
                   <div
-                    className={`h-0 relative overflow-hidden transition duration-[.35] ease-in  ${
-                      isDivShown0 ? "pb-6 h-[171px]" : ""
+                    className={`h-0 relative overflow-hidden transition-all duration-300 ease-in  ${
+                      isDivShown0 ? "pb-6 h-[96px]" : ""
                     }`}
                   >
                     <div className="min-h-[1px] pb-6 text-[#394547] leading-normal max-md:text-sm ">
@@ -280,15 +302,15 @@ function ChoosePlan() {
                       Can I switch subscriptions from monthly to yearly, or
                       yearly to monthly?
                     </div>
-                    {isDivShown1 ? (
-                      <ExpandLessIcon className="w-10 h-10 min-w-[24px] transition duration-[.35]" />
-                    ) : (
-                      <ExpandMoreIcon className="w-10 h-10 min-w-[24px] transition duration-[.35]" />
-                    )}
+                    <ExpandMoreIcon
+                      className={`w-10 h-10 min-w-[24px] transition-transform duration-[.35] ease-in
+                    ${isDivShown1 ? "rotate-180" : ""}
+                    `}
+                    />
                   </div>
                   <div
-                    className={`h-0 relative overflow-hidden transition duration-[.35] ${
-                      isDivShown1 ? "pb-6 h-[108px]" : ""
+                    className={`h-0 relative overflow-hidden transition-all duration-300 ease-in ${
+                      isDivShown1 ? "pb-6 h-[72px]" : ""
                     }`}
                   >
                     <div className="min-h-[1px] pb-6 text-[#394547] leading-normal max-md:text-sm">
@@ -307,15 +329,15 @@ function ChoosePlan() {
                     <div className="font-medium text-2xl relative mb-0 text-[#032b41] max-md:text-xl ">
                       What's included in the Premium plan?
                     </div>
-                    {isDivShown2 ? (
-                      <ExpandLessIcon className="w-10 h-10 min-w-[24px] transition duration-[.35]" />
-                    ) : (
-                      <ExpandMoreIcon className="w-10 h-10 min-w-[24px] transition duration-[.35]" />
-                    )}
+                    <ExpandMoreIcon
+                      className={`w-10 h-10 min-w-[24px] transition-transform duration-[.35] ease-in
+                    ${isDivShown2 ? "rotate-180" : ""}
+                    `}
+                    />
                   </div>
                   <div
-                    className={`h-0 relative overflow-hidden transition duration-[.35] ${
-                      isDivShown2 ? "pb-6 h-[129px]" : ""
+                    className={`h-0 relative overflow-hidden transition-all duration-300 ease-in ${
+                      isDivShown2 ? "pb-6 h-[72px]" : ""
                     }`}
                   >
                     <div className="min-h-[1px] pb-6 text-[#394547] leading-normal max-md:text-sm">
@@ -335,15 +357,15 @@ function ChoosePlan() {
                     <div className="font-medium text-2xl relative mb-0 text-[#032b41] max-md:text-xl ">
                       Can I cancel during my trial or subscription?
                     </div>
-                    {isDivShown3 ? (
-                      <ExpandLessIcon className="w-10 h-10 min-w-[24px] transition duration-[.35]" />
-                    ) : (
-                      <ExpandMoreIcon className="w-10 h-10 min-w-[24px] transition duration-[.35]" />
-                    )}
+                    <ExpandMoreIcon
+                      className={`w-10 h-10 min-w-[24px] transition-transform duration-[.35] ease-in
+                    ${isDivShown3 ? "rotate-180" : ""}
+                    `}
+                    />
                   </div>
                   <div
-                    className={`h-0 relative overflow-hidden transition duration-[.35]  ${
-                      isDivShown3 ? "pb-6 h-[108px] " : ""
+                    className={`h-0 relative overflow-hidden transition-all duration-300 ease-in  ${
+                      isDivShown3 ? "pb-6 h-[72px] " : ""
                     }`}
                   >
                     <div className="min-h-[1px] pb-6 text-[#394547] leading-normal max-md:text-sm ">

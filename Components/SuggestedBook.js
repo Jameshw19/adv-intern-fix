@@ -4,10 +4,15 @@ import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import { BOOKS_URL } from "./API";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import usePremiumStatus from "@/stripe/usePremiumStatus";
+import { UserAuth } from "../Components/context/AuthContext";
 
 function SuggestedBook() {
+  const { user } = UserAuth();
+
   const [bookData, setBookData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const userIsPremiumPlus = usePremiumStatus(user);
 
   useEffect(() => {
     async function fetchData() {
@@ -27,7 +32,10 @@ function SuggestedBook() {
       {bookData.map((book) => (
         <div
           key={book.id}
-          className="relative snap-start pt-[32px] pr-[12px] pl-[12px] pb-[12px] no-underline rounded max-w-[200px] w-full"
+          className="relative snap-start pt-[32px] pr-[12px] pl-[12px] pb-[12px] no-underline rounded max-w-[200px] w-full
+          hover:bg-[#f1f6f4]
+          
+          "
         >
           {isLoading ? (
             <>
@@ -47,13 +55,23 @@ function SuggestedBook() {
               </div>
             </>
           ) : (
-            <Link href={"/book/" + book.id} key={book.id} bookData={book}>
-              {book.subscriptionRequired ? (
-                <div className="bg-[#032b41] w-fit h-[18px] px-2 absolute top-0 right-0 text-[#fff] text-[10px] flex items-center rounded-[20px]">
-                  Premium
-                </div>
+            <Link href={"/book/" + book.id} bookData={book}>
+              {user ? (
+                <>
+                  {!userIsPremiumPlus && book.subscriptionRequired && (
+                    <div className="bg-[#032b41] w-fit h-[18px] px-2 absolute top-0 right-0 text-[#fff] text-[10px] flex items-center rounded-[20px]">
+                      Premium
+                    </div>
+                  )}
+                </>
               ) : (
-                <div></div>
+                <>
+                  {book.subscriptionRequired && (
+                    <div className="bg-[#032b41] w-fit h-[18px] px-2 absolute top-0 right-0 text-[#fff] text-[10px] flex items-center rounded-[20px]">
+                      Premium
+                    </div>
+                  )}
+                </>
               )}
               <div className="mb-2 w-[172px] h-[172px]">
                 <img src={book.imageLink} alt="bookImg" />

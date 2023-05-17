@@ -3,6 +3,7 @@ import SignIn from "./SignIn";
 import { useState } from "react";
 import { UserAuth } from "@/Components/context/AuthContext";
 import Spinner from "@/Components/Spinner";
+import Link from "next/link";
 
 function SignUp({ handleCloseModal }) {
   const { signUp, signUpWithGoogle } = UserAuth();
@@ -12,6 +13,7 @@ function SignUp({ handleCloseModal }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isGoogleSignUpLoading, setIsGoogleSignUpLoading] = useState(false);
+  const [isEmailSignUpLoading, setIsEmailSignUpLoading] = useState(false);
 
   // const auth = getAuth(app);
 
@@ -19,6 +21,7 @@ function SignUp({ handleCloseModal }) {
     try {
       setIsGoogleSignUpLoading(true);
       await signUpWithGoogle();
+      closeModal();
     } catch (error) {
       console.log(error);
     } finally {
@@ -28,9 +31,12 @@ function SignUp({ handleCloseModal }) {
 
   const handleSignUp = async () => {
     try {
+      setIsEmailSignUpLoading(true);
       await signUp(email, password);
+      closeModal();
     } catch (error) {
       console.log(error);
+      setIsEmailSignUpLoading(false);
     }
   };
 
@@ -47,17 +53,17 @@ function SignUp({ handleCloseModal }) {
       {signInModal ? (
         <SignIn handleCloseModal={handleCloseModal} />
       ) : (
-        <div className="w-full z-[9999] fixed top-0 left-0 bg-[rgba(0,0,0,.75)] bg-opacity-50 h-full flex justify-center items-center flex-col ">
-          <div className="relative max-w-[400px] bg-[#fff] rounded-lg w-full z-[9999] ">
+        <div className="w-full z-[9999] fixed top-0 left-0 bg-[rgba(0,0,0,.75)] h-full flex justify-center items-center flex-col ">
+          <div className="relative max-w-[400px] bg-[#fff] rounded-lg w-full z-[9999] shadow-[0,0,10px,rgba(0,0,0,.2)] ">
             <div className="pt-12 pr-8 pb-6 pl-8">
               <div className="text-center text-lg font-bold text-[#032b41] mb-5">
                 Sign up to Summarist
               </div>
-
+              {/* <Link href="/foryoupage"> */}
               <button
                 onClick={handleSignUpGoogle}
                 className="relative flex bg-[#4285f4] text-[#fff] justify-center w-full h-10 rounded text-lg items-center min-w-[180px]
-              transition hover:ease-in hover:bg-[#3367d6]
+              transition hover:ease-in hover:bg-[#3367d6] active:transform active:translate-y-[1px]
               "
               >
                 <div className="flex items-center justify-center w-9 h-9 rounded bg-[#fff] absolute left-[2px]">
@@ -73,6 +79,8 @@ function SignUp({ handleCloseModal }) {
                   <div>Sign up with Google</div>
                 )}
               </button>
+              {/* </Link> */}
+
               <div
                 className="flex items-center justify-center my-4 mx-0 
                before:content-[''] before:block before:flex-grow before:h-[1px] before:bg-[#bac8ce]
@@ -105,13 +113,16 @@ function SignUp({ handleCloseModal }) {
                   type="password"
                   placeholder="Password"
                 ></input>
+
+                {/* <Link href="/foryoupage"> */}
                 <button
                   onClick={handleSignUp}
                   className="bg-[#2bd97c] text-[#032b41] w-full h-10 rounded text-lg flex items-center justify-center
-                min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in"
+                min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in active:transform active:translate-y-[1px]"
                 >
-                  <span>Sign up</span>
+                  {isEmailSignUpLoading ? <Spinner /> : <div>Sign up</div>}
                 </button>
+                {/* </Link> */}
               </div>
             </div>
 

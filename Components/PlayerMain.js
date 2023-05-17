@@ -2,7 +2,6 @@ import Replay10Icon from "@mui/icons-material/Replay10";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import Forward10Icon from "@mui/icons-material/Forward10";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
-import ReactAudioPlayer from "react-audio-player";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const PlayerMain = ({ bookData }) => {
@@ -111,7 +110,7 @@ const PlayerMain = ({ bookData }) => {
       />
 
       <div className="relative w-full overflow-y-auto h-[calc(100vh-160px)] max-md:h-[calc(100vh-260px)] ">
-        <div className="p-6 max-w-[800px] m-auto whitespace-pre-line">
+        <div className="p-6 max-w-[800px] text-base m-auto whitespace-pre-line">
           <div className="text-[#032b41] text-2xl border-b-[1px] mb-8 pb-4 leading-normal max-md:text-xl">
             <b>{bookData.title}</b>
           </div>
@@ -120,7 +119,7 @@ const PlayerMain = ({ bookData }) => {
           </div>
         </div>
         <div
-          className="w-full h-20 mt-auto flex items-center justify-between bg-[#042330] px-10 fixed bottom-0 left-0 z-[9998]
+          className="w-full h-20 mt-auto flex items-center justify-between bg-[#042330] px-10 fixed bottom-0 left-0 z-[9999]
         max-md:h-[180px] max-md:py-4 max-md:px-6 max-md:flex-col
         "
         >
@@ -143,28 +142,28 @@ const PlayerMain = ({ bookData }) => {
             <div className="flex items-center justify-center gap-5">
               <button
                 onClick={skipBackward}
-                className="rounded-[50%] cursor-pointer flex items-center justify-center"
+                className="rounded-[50%] cursor-pointer flex items-center justify-center active:transform active:translate-y-[1px]"
               >
                 <Replay10Icon className="h-7 w-7 stroke-white border-nonev bg-transparent" />
               </button>
               {isPlaying ? (
                 <button
                   onClick={togglePlayPause}
-                  className="bg-white w-10 h-10 rounded-[50%] cursor-pointer "
+                  className="bg-white w-10 h-10 rounded-[50%] cursor-pointer active:transform active:translate-y-[1px]"
                 >
                   <PauseCircleIcon className="text-[#032b41] w-10 h-10 stroke-white " />
                 </button>
               ) : (
                 <button
                   onClick={togglePlayPause}
-                  className="bg-white w-10 h-10 rounded-[50%] cursor-pointer "
+                  className="bg-white w-10 h-10 rounded-[50%] cursor-pointer active:transform active:translate-y-[1px] "
                 >
                   <PlayCircleIcon className="text-[#032b41] w-10 h-10 stroke-white " />
                 </button>
               )}
               <button
                 onClick={skipForward}
-                className="rounded-[50%] cursor-pointer flex items-center justify-center"
+                className="rounded-[50%] cursor-pointer flex items-center justify-center active:transform active:translate-y-[1px]"
               >
                 <Forward10Icon className="h-7 w-7 stroke-white border-nonev bg-transparent" />
               </button>

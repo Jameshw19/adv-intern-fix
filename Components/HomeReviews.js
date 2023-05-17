@@ -94,7 +94,7 @@ function HomeReviews() {
               onClick={handleOpenModal}
               className="cursor-pointer max-w-[300px] items-center justify-center bg-[#2bd97c]
         text-[#032b41] w-full h-10 rounded text-base
-        flex min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in"
+        flex min-w-[180px] transition hover:bg-[#20ba68] hover:ease-in active:transform active:translate-y-[1px]"
             >
               Login
             </button>

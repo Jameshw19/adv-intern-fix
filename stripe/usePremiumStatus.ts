@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { User } from "firebase/auth";
-import isUserPremium from "./isUserPremium";
 import isUserPremiumPlus from "./isUserPremiumPlus";
 
 export default function usePremiumStatus(user: User) {
@@ -9,7 +8,7 @@ export default function usePremiumStatus(user: User) {
   useEffect(() => {
     if (user) {
       const checkPremiumStatus = async function () {
-        setPremiumStatus(await isUserPremium());
+        setPremiumStatus(await isUserPremiumPlus());
       };
       checkPremiumStatus();
     }
